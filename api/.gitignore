@@ -1,0 +1,26 @@
+# Virtual environment
+venv/
+.env
+
+# Bytecode
+__pycache__/
+*.pyc
+
+# Development tools
+.vscode/
+
+# macOS system files
+.DS_Store
+
+# SQLite database file (if used)
+*.db
+*.sqlite3
+
+# Logs
+*.log
+
+# If using Flask-Migrate, ignore migrations:
+# migrations/
+
+# If there are specific files you're using for testing or configuration, add them here
+# config.json
