@@ -1,11 +1,12 @@
-import React from 'react';
+import { Paper } from '@mui/material'
+
 
 interface Props {
   
 }
 
 const NotFound: React.FC<Props> = ({  }) => {
-  return <div>Not Found</div>;
+  return <Paper>Not Found</Paper>;
 };
 
 export default NotFound;
