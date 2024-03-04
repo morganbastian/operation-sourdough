@@ -1,15 +1,27 @@
-import React from 'react';
+import React from 'react'
+import Logo from '../../assets/operations-sourdough-logo.jpg'
+import { Typography, Button, Grid, Container, Paper } from '@mui/material'
+import { Link } from 'react-router-dom'
 
-interface Props {
-  
+interface Props {}
+
+const Home: React.FC<Props> = ({}) => {
+	return (
+		<div>
+			<Paper>
+      <img src={Logo} alt="Logo" />
+				<Typography variant='h1'>Operation Sourdough</Typography>
+				<Typography variant='h3'>About Me</Typography>
+				<Typography variant='h5'>
+					Hi! My name is Lillian Hsu. I am a third year surgery resident at MUSC
+					who has recently discovered her passion for all things sourdough!
+				</Typography>
+				<Typography variant='h4'>Savory</Typography>
+				<Typography variant='h4'>Sweet</Typography>
+				<Button variant='contained'>Checkout</Button>
+			</Paper>
+		</div>
+	)
 }
 
-const Home: React.FC<Props> = ({  }) => {
-  return (
-    <div>
-      
-    </div>
-  );
-};
-
-export default Home;
+export default Home
