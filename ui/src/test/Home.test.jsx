@@ -3,6 +3,10 @@ import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 
 describe('NotFound component', () => {
+	it('renders Logo', () => {
+		render(<Home />)
+		expect(screen.getByAltText('Logo')).toBeInTheDocument()
+	})
 	it('renders Operation Sourdough text', () => {
 		render(<Home />)
 		expect(screen.getByText('Operation Sourdough')).toBeInTheDocument()
@@ -23,9 +27,9 @@ describe('NotFound component', () => {
 		render(<Home />)
 		expect(screen.getByText('Sweet')).toBeInTheDocument();
   });
-	it('render Button', () => {
-		render(<Home />)
-		expect(screen.getByText('Checkout')).toBeInTheDocument();
+	it('renders the "Checkout" button', () => {
+    render(<Home />);
+    expect(screen.getByRole('button', { name: 'Checkout' })).toBeInTheDocument();
   });
-	
+
 })
