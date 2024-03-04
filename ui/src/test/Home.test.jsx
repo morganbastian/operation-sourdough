@@ -2,7 +2,7 @@ import Home from '../views/Home'
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 
-describe('NotFound component', () => {
+describe('Home component', () => {
 	it('renders Logo', () => {
 		render(<Home />)
 		expect(screen.getByAltText('Logo')).toBeInTheDocument()
