@@ -4,20 +4,25 @@ import api from '../../utility/api';
 interface Props {}
 
 const SweetCard: React.FC<Props> = ({}) => {
-	const [productData, setProudctData] = useState([])
+  const [productData, setProductData] = useState([])
+	const [error, setError] = useState<string | null>(null)
 
-
-  useEffect(() => {
+	useEffect(() => {
 		const fetchProducts = async () => {
 			try {
 				const response = await api.get('/products')
-        setProudctData(response.data)
+				setProductData(response.data)
 			} catch (error) {
-				console.error('Error fetching product data:', error)
+				const errorMessage =
+					error instanceof Error ? error.message : 'An error occurred'
+				setError(`Error fetching product data: ${errorMessage}`)
 			}
 		}
 		fetchProducts()
 	}, [])
+	if (error) {
+		return <div>{error}</div>
+	}
 
   return (
     <div>
