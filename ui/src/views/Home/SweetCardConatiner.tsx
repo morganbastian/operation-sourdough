@@ -2,7 +2,7 @@ import React from 'react';
 
 interface Props {}
 
-const ProductCard: React.FC<Props> = ({}) => {
+const SweetCardContainer: React.FC<Props> = ({}) => {
   
 
   return (
@@ -12,4 +12,4 @@ const ProductCard: React.FC<Props> = ({}) => {
   );
 };
 
-export default ProductCard;
+export default SweetCardContainer;
