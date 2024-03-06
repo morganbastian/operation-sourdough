@@ -1,44 +1,44 @@
-import React, { useEffect, useState } from 'react';
-import api from '../../utility/api';
+import React from 'react';
 
-interface Props {}
+interface Product {
+  product_id: number;
+  name: string;
+  description: string;
+  price: number;
+  product_type: string;
+}
 
-const SweetCard: React.FC<Props> = ({}) => {
-  const [productData, setProductData] = useState([])
-	const [error, setError] = useState<string | null>(null)
+interface AddOn {
+  add_on_id: number;
+  name: string;
+  price: number;
+}
 
-	useEffect(() => {
-		const fetchProducts = async () => {
-			try {
-				const response = await api.get('/products')
-				setProductData(response.data)
-			} catch (error) {
-				const errorMessage =
-					error instanceof Error ? error.message : 'An error occurred'
-				setError(`Error fetching product data: ${errorMessage}`)
-			}
-		}
-		fetchProducts()
-	}, [])
-	if (error) {
-		return <div>{error}</div>
-	}
+interface Props {
+  product: Product;
+  addOns: AddOn[]; 
+}
 
+const SweetCard: React.FC<Props> = ({ product, addOns }) => {
   return (
     <div>
-    {productData.map((product: any) => {
-      if (product.product_type === 'sweet') {
-        return (
-          <div key={product.product_id}>
-            <h2>{product.name}</h2>
-            <p>{product.description}</p>
-            <p>{product.price}</p>
-          </div>
-        );
-      }
-    })}
-  </div>
+      <h2>{product.name}</h2>
+      <p>{product.description}</p>
+      <p>Price: ${product.price}</p>
+      {addOns.length > 0 && (
+        <div>
+          <h3>Add-Ons:</h3>
+          <ul>
+            {addOns.map((addOn) => (
+              <li key={addOn.add_on_id}>
+                {addOn.name} - ${addOn.price}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
   );
-};
+}
 
 export default SweetCard;

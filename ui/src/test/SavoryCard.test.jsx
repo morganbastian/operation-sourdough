@@ -1,46 +1,42 @@
-import { describe, it, expect, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
-import SavoryCard from '../views/Home/SavoryCard'
-import api from '../utility/api'
-describe('SavoryCard Component', () => {
-  it('renders the product data correctly', async () => {
-    const mockProductData = [
-      {
-        product_id: 1,
-        name: 'Savory Product 1',
-        description: 'This is the description for Savory Product 1',
-        price: 10.99,
-        product_type: 'savory'
-      },
-      {
-        product_id: 2,
-        name: 'Savory Product 2',
-        description: 'This is the description for Savory Product 2',
-        price: 12.99,
-        product_type: 'savory'
-      }
-    ];
+// SavoryCard.test.tsx
+import React from 'react';
+import { describe, it, expect } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import SavoryCard from '../views/Home/SavoryCard';
 
-    // Use vi.spyOn for mocking
-    vi.spyOn(api, 'get').mockResolvedValue({ data: mockProductData });
+describe('SavoryCard', () => {
+  const mockProduct = {
+    product_id: 1,
+    name: 'Test Product',
+    description: 'Test Description',
+    price: 100,
+    product_type: 'savory',
+  };
 
-    render(<SavoryCard />);
+  const mockAddOns = [
+    { add_on_id: 1, name: 'Add-On 1', price: 10 },
+    { add_on_id: 2, name: 'Add-On 2', price: 20 },
+  ];
 
-    // Use findByText for asynchronous elements
-    expect(await screen.findByText('Savory Product 1')).toBeInTheDocument();
-    expect(await screen.findByText('This is the description for Savory Product 1')).toBeInTheDocument();
-    expect(await screen.findByText('10.99')).toBeInTheDocument();
+  it('renders product details correctly', () => {
+    render(<SavoryCard product={mockProduct} addOns={[]} />);
 
-    expect(await screen.findByText('Savory Product 2')).toBeInTheDocument();
-    expect(await screen.findByText('This is the description for Savory Product 2')).toBeInTheDocument();
-    expect(await screen.findByText('12.99')).toBeInTheDocument();
+    expect(screen.getByText('Test Product')).toBeInTheDocument();
+    expect(screen.getByText('Test Description')).toBeInTheDocument();
+    expect(screen.getByText('Price: $100')).toBeInTheDocument();
   });
 
-  it('handles error when fetching product data', async () => {
-    vi.spyOn(api, 'get').mockRejectedValue(new Error('Failed to fetch product data'));
+  it('renders product with add-ons correctly', () => {
+    render(<SavoryCard product={mockProduct} addOns={mockAddOns} />);
 
-    render(<SavoryCard />);
+    expect(screen.getByText('Add-Ons:')).toBeInTheDocument();
+    expect(screen.getByText('Add-On 1 - $10')).toBeInTheDocument();
+    expect(screen.getByText('Add-On 2 - $20')).toBeInTheDocument();
+  });
 
-    expect(await screen.findByText('Error fetching product data: Failed to fetch product data')).toBeInTheDocument();
+  it('does not render add-ons section when there are no add-ons', () => {
+    const { queryByText } = render(<SavoryCard product={mockProduct} addOns={[]} />);
+    expect(queryByText('Add-Ons:')).not.toBeInTheDocument();
   });
 });
