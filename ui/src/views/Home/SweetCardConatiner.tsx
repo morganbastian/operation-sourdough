@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../utility/api';
 import SweetCard from './SweetCard';
+import { Grid } from '@mui/material';
 
 interface Product {
   product_id: number;
@@ -59,12 +60,20 @@ const SweetCardContainer: React.FC = () => {
   }
 
   return (
-    <div>
-      {products.map((product) => (
-        // Pass both product and its add-ons to SweetCard
-        <SweetCard key={product.product_id} product={product} addOns={product.addOns} />
-      ))}
-    </div>
+    <Grid container spacing={3}>
+			{products.map((product) => (
+				<Grid
+					item
+					xs={12}
+					sm={6}
+					md={4}
+					key={product.product_id}
+					sx={{ display: 'flex', width: '250px', height: '300px' }}
+				>
+					<SweetCard product={product} addOns={product.addOns} />
+				</Grid>
+			))}
+		</Grid>
   );
 };
 
