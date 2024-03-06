@@ -1,6 +1,4 @@
 import React from 'react'
-import SavoryCard from './SavoryCard'
-import SweetCard from './SweetCard'
 import Logo from '../../assets/operations-sourdough-logo.jpg'
 import { Typography, Button, Grid, Container, Paper } from '@mui/material'
 import { Link } from 'react-router-dom'

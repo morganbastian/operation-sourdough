@@ -70,14 +70,7 @@ const SavoryCardContainer: React.FC = () => {
 	return (
 		<Grid container spacing={3}>
 			{products.map((product) => (
-				<Grid
-					item
-					xs={12}
-					sm={6}
-					md={4}
-					key={product.product_id}
-					sx={{ display: 'flex', width: '200px', height: '300px' }}
-				>
+				<Grid item xs={12} sm={6} md={4} key={product.product_id}>
 					<SavoryCard product={product} addOns={product.addOns} />
 				</Grid>
 			))}
