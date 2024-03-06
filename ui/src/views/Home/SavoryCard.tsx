@@ -34,15 +34,11 @@ interface Props {
 const SavoryCard: React.FC<Props> = ({ product, addOns }) => {
 	const [selectedAddOn, setSelectedAddOn] = useState('')
 	const [counter, setCounter] = useState(0)
-
-	const radioGroupRef = useRef<HTMLFieldSetElement>(null)
+	const cardRef = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
-			if (
-				radioGroupRef.current &&
-				!radioGroupRef.current.contains(event.target as Node)
-			) {
+			if (cardRef.current && !cardRef.current.contains(event.target as Node)) {
 				setSelectedAddOn('')
 			}
 		}
@@ -68,14 +64,16 @@ const SavoryCard: React.FC<Props> = ({ product, addOns }) => {
 				flexDirection: 'column',
 				width: '300px',
 				height: '400px',
+				margin: '25px',
 			}}
+			ref={cardRef}
 		>
 			<CardContent>
 				<Typography variant='h5'>{product.name}</Typography>
 				<Typography color='text.secondary'>{product.description}</Typography>
 				<Typography>Price: ${product.price}</Typography>
 				{addOns.length > 0 && (
-					<FormControl component='fieldset' sx={{ mt: 2 }} ref={radioGroupRef}>
+					<FormControl component='fieldset' sx={{ mt: 2 }}>
 						<Typography variant='h6'>Add-Ons:</Typography>
 						<RadioGroup
 							aria-label='add-ons'
