@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_cors import CORS
 import os
 from dotenv import load_dotenv
 
@@ -8,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-
+CORS(app)
 # Use environment variables
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = (
