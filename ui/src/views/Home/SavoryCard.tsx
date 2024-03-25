@@ -57,13 +57,22 @@ const SavoryCard: React.FC<Props> = ({ product, addOns }) => {
 	const handleDecrement = () =>
 		setCounter((prevCounter) => Math.max(0, prevCounter - 1))
 
+	const handleAddToCart = () => {
+		// Logic for adding to cart goes here. For now, we log the selections.
+		console.log({
+			productId: product.product_id,
+			selectedAddOn,
+			quantity: counter,
+		})
+	}
+
 	return (
 		<Card
 			sx={{
 				display: 'flex',
 				flexDirection: 'column',
 				width: '300px',
-				height: '400px',
+				height: '450px',
 				margin: '25px',
 			}}
 			ref={cardRef}
@@ -114,6 +123,18 @@ const SavoryCard: React.FC<Props> = ({ product, addOns }) => {
 						sx={{ minWidth: '36px' }}
 					>
 						<AddIcon />
+					</Button>
+				</div>
+				{/* Center the Add to Cart Button */}
+				<div
+					style={{
+						display: 'flex',
+						justifyContent: 'center', // This centers the button horizontally
+						marginTop: '20px', // Adds some space above the button
+					}}
+				>
+					<Button variant='contained' color='primary' onClick={handleAddToCart}>
+						Add to Cart
 					</Button>
 				</div>
 			</CardContent>
