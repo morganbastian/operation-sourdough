@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Grid } from '@mui/material'
-import api from '../../utility/api'
+import { fetchSavoryProductsAndAddOns } from '../../utility/api'
 import SavoryCard from './SavoryCard'
 
 interface Product {
@@ -28,32 +28,11 @@ const SavoryCardContainer: React.FC = () => {
 	useEffect(() => {
 		const fetchProductsAndAddOns = async () => {
 			try {
-				// Fetch products
-				const productResponse = await api.get('/products')
-				const savoryProducts: Product[] = productResponse.data.filter(
-					(product: Product) => product.product_type === 'savory'
-				)
-
-				// For each product, fetch its add-ons
-				const productsWithAddOns: ProductWithAddOns[] = await Promise.all(
-					savoryProducts.map(async (product) => {
-						try {
-							const addOnsResponse = await api.get(
-								`/products/${product.product_id}/add_ons`
-							)
-							return { ...product, addOns: addOnsResponse.data }
-						} catch (error) {
-							console.error(
-								`Failed to fetch add-ons for product ${product.product_id}`,
-								error
-							)
-							return { ...product, addOns: [] }
-						}
-					})
-				)
-
+				// Use the fetchSavoryProductsAndAddOns function to get products and their add-ons
+				const productsWithAddOns = await fetchSavoryProductsAndAddOns()
 				setProducts(productsWithAddOns)
 			} catch (error) {
+				// Handle errors
 				const errorMessage =
 					error instanceof Error ? error.message : 'An error occurred'
 				setError(`Error fetching product and add-on data: ${errorMessage}`)

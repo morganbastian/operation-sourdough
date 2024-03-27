@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import api from '../../utility/api'
-import SweetCard from './SweetCard'
 import { Grid } from '@mui/material'
+import { fetchSweetProductsAndAddOns } from '../../utility/api' 
+import SweetCard from './SweetCard'
 
 interface Product {
 	product_id: number
@@ -26,41 +26,20 @@ const SweetCardContainer: React.FC = () => {
 	const [error, setError] = useState<string | null>(null)
 
 	useEffect(() => {
-		const fetchProductsAndAddOns = async () => {
+		const initFetch = async () => {
 			try {
-				// Fetch products
-				const productResponse = await api.get('/products')
-				const savoryProducts: Product[] = productResponse.data.filter(
-					(product: Product) => product.product_type === 'sweet'
-				)
-
-				// For each product, fetch its add-ons
-				const productsWithAddOns: ProductWithAddOns[] = await Promise.all(
-					savoryProducts.map(async (product) => {
-						try {
-							const addOnsResponse = await api.get(
-								`/products/${product.product_id}/add_ons`
-							)
-							return { ...product, addOns: addOnsResponse.data }
-						} catch (error) {
-							console.error(
-								`Failed to fetch add-ons for product ${product.product_id}`,
-								error
-							)
-							return { ...product, addOns: [] }
-						}
-					})
-				)
-
+				const productsWithAddOns = await fetchSweetProductsAndAddOns()
 				setProducts(productsWithAddOns)
 			} catch (error) {
 				const errorMessage =
 					error instanceof Error ? error.message : 'An error occurred'
-				setError(`Error fetching product and add-on data: ${errorMessage}`)
+				setError(
+					`Error fetching sweet product and add-on data: ${errorMessage}`
+				)
 			}
 		}
 
-		fetchProductsAndAddOns()
+		initFetch()
 	}, [])
 
 	if (error) {
