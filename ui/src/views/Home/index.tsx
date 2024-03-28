@@ -11,7 +11,7 @@ const Home: React.FC<Props> = ({}) => {
 	return (
 		<div>
 			<Paper>
-      <img src={Logo} alt="Logo" />
+				<img src={Logo} alt='Logo' />
 				<Typography variant='h1'>Operation Sourdough</Typography>
 				<Typography variant='h3'>About Me</Typography>
 				<Typography variant='h5'>
@@ -22,7 +22,9 @@ const Home: React.FC<Props> = ({}) => {
 				<SavoryCardContainer></SavoryCardContainer>
 				<Typography variant='h4'>Sweet</Typography>
 				<SweetCardContainer></SweetCardContainer>
-				<Button variant='contained'>Checkout</Button>
+				<Button variant='contained' component={Link} to='/checkout'>
+					Checkout
+				</Button>
 			</Paper>
 		</div>
 	)
