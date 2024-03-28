@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
+import { useCart } from '../Cart/CartContext'
 import {
 	Card,
 	CardContent,
@@ -57,13 +58,22 @@ const SweetCard: React.FC<Props> = ({ product, addOns }) => {
 	const handleDecrement = () =>
 		setCounter((prevCounter) => Math.max(0, prevCounter - 1))
 
+	const { addToCart } = useCart() // Use the useCart hook to access addToCart
+
 	const handleAddToCart = () => {
-		// Logic for adding to cart goes here. For now, we log the selections.
-		console.log({
+		// Prepare the item object based on your needs
+		const item = {
 			productId: product.product_id,
-			selectedAddOn,
+			name: product.name,
+			price: product.price,
+			selectedAddOn: selectedAddOn,
 			quantity: counter,
-		})
+		}
+
+		addToCart(item) // Add the item to the cart
+
+		// Optional: Provide feedback to the user or reset component state
+		console.log('Item added to cart:', item)
 	}
 
 	return (
