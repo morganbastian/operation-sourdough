@@ -11,10 +11,10 @@ import {
 	ListItemText,
 	Divider,
 } from '@mui/material'
-import { useCart } from '../Cart/CartContext' // Make sure the path matches your file structure
+import { useCart } from '../Cart/CartContext' // Correctly import useCart
 
 const CheckoutPage: React.FC = () => {
-	const { cart } = useCart() // Retrieve cart items using useCart hook
+	const { cart, calculateTotal } = useCart() // Use calculateTotal from the cart context
 	const [customerDetails, setCustomerDetails] = useState({
 		name: '',
 		address: '',
@@ -34,11 +34,12 @@ const CheckoutPage: React.FC = () => {
 	const handleSubmit = (event: React.FormEvent) => {
 		event.preventDefault()
 		console.log('Customer Details:', customerDetails)
-		// Process checkout here
+		// Process checkout here, like sending data to a backend server
 	}
 
-	// Calculate the total price of the cart items
-	const totalPrice = cart.reduce((total, item) => total + item.price, 0)
+	// Use calculateTotal from context to get the total price
+	const totalPrice = calculateTotal ? calculateTotal() : 0
+	const formattedTotalPrice = totalPrice.toFixed(2)
 
 	return (
 		<Container maxWidth='sm'>
@@ -46,22 +47,29 @@ const CheckoutPage: React.FC = () => {
 				<Typography variant='h5' component='h3' sx={{ mb: 3 }}>
 					Checkout
 				</Typography>
-
 				<List disablePadding>
 					{cart.map((item, index) => (
-						<ListItem key={index} sx={{ py: 1, px: 0 }}>
-							<ListItemText
-								primary={item.name}
-								secondary={`Quantity: ${item.quantity}`}
-							/>
-							<Typography variant='body2'>${item.price}</Typography>
-						</ListItem>
+						<React.Fragment key={index}>
+							<ListItem sx={{ py: 1, px: 0 }}>
+								<ListItemText
+									primary={item.name}
+									secondary={`Quantity: ${item.quantity}`}
+								/>
+								<Typography variant='body2'>
+									$
+									{(
+										item.price +
+										(item.selectedAddOn ? item.selectedAddOn.price : 0)
+									).toFixed(2)}
+								</Typography>
+							</ListItem>
+							{index < cart.length - 1 && <Divider />}
+						</React.Fragment>
 					))}
-					<Divider sx={{ my: 2 }} />
 					<ListItem sx={{ py: 1, px: 0 }}>
 						<ListItemText primary='Total' />
 						<Typography variant='subtitle1' sx={{ fontWeight: 'bold' }}>
-							${totalPrice}
+							${formattedTotalPrice}
 						</Typography>
 					</ListItem>
 				</List>
@@ -72,62 +80,29 @@ const CheckoutPage: React.FC = () => {
 
 				<form onSubmit={handleSubmit}>
 					<Grid container spacing={2}>
-						<Grid item xs={12}>
-							<TextField
-								label='Name'
-								name='name'
-								variant='outlined'
-								fullWidth
-								required
-								value={customerDetails.name}
-								onChange={handleInputChange}
-							/>
-						</Grid>
-						<Grid item xs={12}>
-							<TextField
-								label='Address'
-								name='address'
-								variant='outlined'
-								fullWidth
-								required
-								value={customerDetails.address}
-								onChange={handleInputChange}
-							/>
-						</Grid>
-						<Grid item xs={6}>
-							<TextField
-								label='Zip Code'
-								name='zipCode'
-								variant='outlined'
-								fullWidth
-								required
-								value={customerDetails.zipCode}
-								onChange={handleInputChange}
-							/>
-						</Grid>
-						<Grid item xs={6}>
-							<TextField
-								label='Phone Number'
-								name='phone'
-								variant='outlined'
-								fullWidth
-								required
-								value={customerDetails.phone}
-								onChange={handleInputChange}
-							/>
-						</Grid>
-						<Grid item xs={12}>
-							<TextField
-								label='Email'
-								name='email'
-								type='email'
-								variant='outlined'
-								fullWidth
-								required
-								value={customerDetails.email}
-								onChange={handleInputChange}
-							/>
-						</Grid>
+						{Object.entries(customerDetails).map(([key, value]) => (
+							<Grid
+								item
+								xs={key === 'zipCode' || key === 'phone' ? 6 : 12}
+								key={key}
+							>
+								<TextField
+									label={
+										key.charAt(0).toUpperCase() +
+										key
+											.slice(1)
+											.replace(/([A-Z])/g, ' $1')
+											.trim()
+									} // Convert camelCase to words
+									name={key}
+									variant='outlined'
+									fullWidth
+									required
+									value={value}
+									onChange={handleInputChange}
+								/>
+							</Grid>
+						))}
 					</Grid>
 					<Button
 						type='submit'
@@ -136,7 +111,7 @@ const CheckoutPage: React.FC = () => {
 						fullWidth
 						sx={{ mt: 3 }}
 					>
-						Proceed
+						Submit Order
 					</Button>
 				</form>
 			</Paper>

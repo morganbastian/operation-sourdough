@@ -33,14 +33,14 @@ interface Props {
 }
 
 const SavoryCard: React.FC<Props> = ({ product, addOns }) => {
-	const [selectedAddOn, setSelectedAddOn] = useState('')
+	const [selectedAddOnId, setSelectedAddOnId] = useState<string | null>(null)
 	const [counter, setCounter] = useState(0)
 	const cardRef = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			if (cardRef.current && !cardRef.current.contains(event.target as Node)) {
-				setSelectedAddOn('')
+				setSelectedAddOnId(null)
 			}
 		}
 
@@ -51,29 +51,32 @@ const SavoryCard: React.FC<Props> = ({ product, addOns }) => {
 	}, [])
 
 	const handleAddOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setSelectedAddOn(event.target.value)
+		setSelectedAddOnId(event.target.value)
 	}
 
 	const handleIncrement = () => setCounter((prevCounter) => prevCounter + 1)
 	const handleDecrement = () =>
 		setCounter((prevCounter) => Math.max(0, prevCounter - 1))
 
-	const { addToCart } = useCart() // Use the useCart hook to access addToCart
+	const { addToCart } = useCart()
 
 	const handleAddToCart = () => {
-		// Prepare the item object based on your needs
+		const selectedAddOn = addOns.find(
+			(addOn) => String(addOn.add_on_id) === selectedAddOnId
+		)
+
 		const item = {
-			productId: product.product_id,
+			product_id: product.product_id,
 			name: product.name,
+			description: product.description,
 			price: product.price,
-			selectedAddOn: selectedAddOn,
+			product_type: product.product_type,
+			selectedAddOn: selectedAddOn || null,
 			quantity: counter,
 		}
 
-		addToCart(item) // Add the item to the cart
-
-		// Optional: Provide feedback to the user or reset component state
-		console.log('Item added to cart:', item)
+		addToCart(item)
+		console.log('Item added to cart:', item, 'type of price:', typeof(item.price))
 	}
 
 	return (
@@ -97,7 +100,7 @@ const SavoryCard: React.FC<Props> = ({ product, addOns }) => {
 						<RadioGroup
 							aria-label='add-ons'
 							name='add-ons'
-							value={selectedAddOn}
+							value={selectedAddOnId || ''}
 							onChange={handleAddOnChange}
 						>
 							{addOns.map((addOn) => (
@@ -135,12 +138,11 @@ const SavoryCard: React.FC<Props> = ({ product, addOns }) => {
 						<AddIcon />
 					</Button>
 				</div>
-				{/* Center the Add to Cart Button */}
 				<div
 					style={{
 						display: 'flex',
-						justifyContent: 'center', // This centers the button horizontally
-						marginTop: '20px', // Adds some space above the button
+						justifyContent: 'center',
+						marginTop: '20px',
 					}}
 				>
 					<Button variant='contained' color='primary' onClick={handleAddToCart}>
