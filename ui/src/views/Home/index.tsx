@@ -1,6 +1,4 @@
 import React from 'react'
-import SavoryCard from './SavoryCard'
-import SweetCard from './SweetCard'
 import Logo from '../../assets/operations-sourdough-logo.jpg'
 import { Typography, Button, Grid, Container, Paper } from '@mui/material'
 import { Link } from 'react-router-dom'
@@ -13,7 +11,7 @@ const Home: React.FC<Props> = ({}) => {
 	return (
 		<div>
 			<Paper>
-      <img src={Logo} alt="Logo" />
+				<img src={Logo} alt='Logo' />
 				<Typography variant='h1'>Operation Sourdough</Typography>
 				<Typography variant='h3'>About Me</Typography>
 				<Typography variant='h5'>
@@ -24,7 +22,9 @@ const Home: React.FC<Props> = ({}) => {
 				<SavoryCardContainer></SavoryCardContainer>
 				<Typography variant='h4'>Sweet</Typography>
 				<SweetCardContainer></SweetCardContainer>
-				<Button variant='contained'>Checkout</Button>
+				<Button variant='contained' component={Link} to='/checkout'>
+					Checkout
+				</Button>
 			</Paper>
 		</div>
 	)
