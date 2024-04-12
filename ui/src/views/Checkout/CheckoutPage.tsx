@@ -10,11 +10,14 @@ import {
 	ListItem,
 	ListItemText,
 	Divider,
+	Alert,
 } from '@mui/material'
-import { useCart } from '../Cart/CartContext' // Correctly import useCart
+import { useCart } from '../Cart/CartContext'
+import { submitOrder } from '../../utility/api'
+import { useNavigate } from 'react-router-dom'
 
 const CheckoutPage: React.FC = () => {
-	const { cart, calculateTotal } = useCart() // Use calculateTotal from the cart context
+	const { cart, calculateTotal } = useCart()
 	const [customerDetails, setCustomerDetails] = useState({
 		name: '',
 		address: '',
@@ -22,6 +25,12 @@ const CheckoutPage: React.FC = () => {
 		email: '',
 		phone: '',
 	})
+	const [alertInfo, setAlertInfo] = useState<{
+		type: 'success' | 'error'
+		message: string
+	} | null>(null)
+
+	const navigate = useNavigate()
 
 	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = event.target
@@ -31,19 +40,36 @@ const CheckoutPage: React.FC = () => {
 		}))
 	}
 
-	const handleSubmit = (event: React.FormEvent) => {
+	const handleSubmit = async (event: React.FormEvent) => {
 		event.preventDefault()
-		console.log('Customer Details:', customerDetails)
-		// Process checkout here, like sending data to a backend server
+		try {
+			await submitOrder({ cart, customerDetails })
+			setAlertInfo({
+				type: 'success',
+				message:
+					'Order has been submitted successfully! We will contact you with delivery information.',
+			})
+			setTimeout(() => navigate('/'), 5000)
+		} catch (error) {
+			console.error('Failed to submit order:', error)
+			setAlertInfo({
+				type: 'error',
+				message: 'Failed to submit order. Please try again.',
+			})
+		}
 	}
 
-	// Use calculateTotal from context to get the total price
 	const totalPrice = calculateTotal ? calculateTotal() : 0
 	const formattedTotalPrice = totalPrice.toFixed(2)
 
 	return (
 		<Container maxWidth='sm'>
 			<Paper elevation={3} sx={{ p: 4, my: 4 }}>
+				{alertInfo && (
+					<Alert severity={alertInfo.type} sx={{ mb: 2 }}>
+						{alertInfo.message}
+					</Alert>
+				)}
 				<Typography variant='h5' component='h3' sx={{ mb: 3 }}>
 					Checkout
 				</Typography>
@@ -110,6 +136,7 @@ const CheckoutPage: React.FC = () => {
 						color='primary'
 						fullWidth
 						sx={{ mt: 3 }}
+						onClick={handleSubmit}
 					>
 						Submit Order
 					</Button>
