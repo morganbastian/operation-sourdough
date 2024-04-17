@@ -14,7 +14,6 @@ import {
 } from '@mui/material'
 import { useCart } from '../Cart/CartContext'
 import { submitOrder } from '../../utility/api'
-import { useNavigate } from 'react-router-dom'
 
 const CheckoutPage: React.FC = () => {
 	const { cart, calculateTotal } = useCart()
@@ -29,8 +28,6 @@ const CheckoutPage: React.FC = () => {
 		type: 'success' | 'error'
 		message: string
 	} | null>(null)
-
-	const navigate = useNavigate()
 
 	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = event.target
@@ -49,7 +46,6 @@ const CheckoutPage: React.FC = () => {
 				message:
 					'Order has been submitted successfully! We will contact you with delivery information.',
 			})
-			setTimeout(() => navigate('/'), 5000)
 		} catch (error) {
 			console.error('Failed to submit order:', error)
 			setAlertInfo({
