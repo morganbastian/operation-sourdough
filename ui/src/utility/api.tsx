@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { CartItem } from '../views/Cart/CartContext';
 
 // Initialize Axios instance
 const axiosInstance = axios.create({
@@ -22,6 +23,14 @@ interface AddOn {
 
 interface ProductWithAddOns extends Product {
   addOns: AddOn[];
+}
+
+interface CustomerDetails {
+  name: string;
+  address: string;
+  zipCode: string;
+  email: string;
+  phone: string;
 }
 
 // Helper function to normalize product data
@@ -99,5 +108,15 @@ export const fetchSweetProductsAndAddOns = async (): Promise<ProductWithAddOns[]
   } catch (error) {
     console.error('Error fetching sweet products and add-ons', error);
     throw error; // Re-throw the error to be handled by the caller
+  }
+};
+
+export const submitOrder = async (orderData: { cart: CartItem[]; customerDetails: CustomerDetails }): Promise<void> => {
+  try {
+    await axiosInstance.post('/submit-order', orderData);
+    console.log('Order submitted successfully');
+  } catch (error) {
+    console.error('Error submitting order:', error);
+    throw error; // Re-throw the error to be handled by the caller or in the UI
   }
 };
